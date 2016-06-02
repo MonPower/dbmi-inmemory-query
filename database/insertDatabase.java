@@ -61,6 +61,7 @@ class Admissions implements PdxSerializable{
     private String religion;
     private String maritial_status;
     private String ethnicity;
+    private String diagnosis;
     private int has_inevents_data;
     private int has_chartevents_data;
 
@@ -85,14 +86,15 @@ class Admissions implements PdxSerializable{
         this.religion = split_line[11];
         this.maritial_status = split_line[12];
         this.ethnicity = split_line[13];
-        this.has_inevents_data = Integer.parseInt(split_line[14]);
-        this.has_chartevents_data = Integer.parseInt(split_line[15]);
+        this.diagnosis = split_line[14]
+        this.has_inevents_data = Integer.parseInt(split_line[15]);
+        this.has_chartevents_data = Integer.parseInt(split_line[16]);
     }
 
     public Admissions(final int row_id, final int subject_id, final int hadm_id, final String admittime,
         final String dischtime, final String deathtime, final String admission_type, final String admission_location,
         final String discharge_location, final String insurance, final String language, final String religion,
-        final String maritial_status, final String ethnicity, final int has_inevents_data, final int has_chartevents_data) {
+        final String maritial_status, final String ethnicity, final String diagnosis, final int has_inevents_data, final int has_chartevents_data) {
         this.row_id = row_id;
         this.subject_id = subject_id;
         this.hadm_id = hadm_id;
@@ -107,6 +109,7 @@ class Admissions implements PdxSerializable{
         this.religion = religion;
         this.maritial_status = maritial_status;
         this.ethnicity = ethnicity;
+        this.diagnosis = diagnosis;
         this.has_inevents_data = has_inevents_data;
         this.has_chartevents_data = has_chartevents_data;
     }
@@ -127,6 +130,7 @@ class Admissions implements PdxSerializable{
         religion = pr.readString("religion");
         maritial_status = pr.readString("maritial_status");
         ethnicity = pr.readString("ethnicity");
+        diagnosis = pr.readString("diagnosis");
         has_inevents_data = pr.readInt("has_inevents_data");
         has_chartevents_data = pr.readInt("has_chartevents_data");
     }
@@ -147,6 +151,7 @@ class Admissions implements PdxSerializable{
         pw.writeString("religion", religion);
         pw.writeString("maritial_status", maritial_status);
         pw.writeString("ethnicity", ethnicity);
+        pw.writeString("diagnosis", diagnosis);
         pw.writeInt("has_inevents_data", has_inevents_data);
         pw.writeInt("has_chartevents_data", has_chartevents_data);
 
