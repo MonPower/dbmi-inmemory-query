@@ -73,7 +73,7 @@ class Admissions implements PdxSerializable{
 		}
         this.row_id = Integer.parseInt(split_line[0]);
         this.subject_id = Integer.parseInt(split_line[1]);
-        this.hadm_id = Integer.parseInt(split_line[2])
+        this.hadm_id = Integer.parseInt(split_line[2]);
         this.admittime = split_line[3];
         this.dischtime = split_line[4];
         this.deathtime = split_line[5];
@@ -82,7 +82,7 @@ class Admissions implements PdxSerializable{
         this.discharge_location = split_line[8];
         this.insurance = split_line[9];
         this.language = split_line[10];
-        this.religion = split_line[111];
+        this.religion = split_line[11];
         this.maritial_status = split_line[12];
         this.ethnicity = split_line[13];
         this.has_inevents_data = Integer.parseInt(split_line[14]);
