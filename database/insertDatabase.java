@@ -73,19 +73,20 @@ class Admissions implements PdxSerializable{
 		}
         this.row_id = Integer.parseInt(split_line[0]);
         this.subject_id = Integer.parseInt(split_line[1]);
-        this.admittime = split_line[2];
-        this.dischtime = split_line[3];
-        this.deathtime = split_line[4];
-        this.admission_type = split_line[5];
-        this.admission_location = split_line[6];
-        this.discharge_location = split_line[7];
-        this.insurance = split_line[8];
-        this.language = split_line[9];
-        this.religion = split_line[10];
-        this.maritial_status = split_line[11];
-        this.ethnicity = split_line[12];
-        this.has_inevents_data = Integer.parseInt(split_line[13]);
-        this.has_chartevents_data = Integer.parseInt(split_line[14]);
+        this.hadm_id = Integer.parseInt(split_line[2])
+        this.admittime = split_line[3];
+        this.dischtime = split_line[4];
+        this.deathtime = split_line[5];
+        this.admission_type = split_line[6];
+        this.admission_location = split_line[7];
+        this.discharge_location = split_line[8];
+        this.insurance = split_line[9];
+        this.language = split_line[10];
+        this.religion = split_line[111];
+        this.maritial_status = split_line[12];
+        this.ethnicity = split_line[13];
+        this.has_inevents_data = Integer.parseInt(split_line[14]);
+        this.has_chartevents_data = Integer.parseInt(split_line[15]);
     }
 
     public Admissions(final int row_id, final int subject_id, final int hadm_id, final String admittime,
@@ -94,6 +95,7 @@ class Admissions implements PdxSerializable{
         final String maritial_status, final String ethnicity, final int has_inevents_data, final int has_chartevents_data) {
         this.row_id = row_id;
         this.subject_id = subject_id;
+        this.hadm_id = hadm_id;
         this.admittime = admittime;
         this.dischtime = dischtime;
         this.deathtime = deathtime;
@@ -133,6 +135,7 @@ class Admissions implements PdxSerializable{
     public void toData(PdxWriter pw) {
         pw.writeInt("row_id", row_id);
         pw.writeInt("subject_id", subject_id);
+        pw.writeInt("hadm_id", hadm_id);
         pw.writeString("admittime", admittime);
         pw.writeString("dischtime", dischtime);
         pw.writeString("deathtime", deathtime);
