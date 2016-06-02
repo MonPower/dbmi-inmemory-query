@@ -4,7 +4,9 @@ import java.io.*;
 
 import com.gemstone.gemfire.DataSerializable;
 import com.gemstone.gemfire.cache.Region;
-import com.gemstone.gemfire.cache.client.*;
+import com.gemstone.gemfire.cache.client.ClientCache;
+import com.gemstone.gemfire.cache.client.ClientCacheFactory;
+import com.gemstone.gemfire.cache.client.ClientRegionShortcut;
 import com.gemstone.gemfire.cache.query.FunctionDomainException;
 import com.gemstone.gemfire.cache.query.NameResolutionException;
 import com.gemstone.gemfire.cache.query.QueryInvocationTargetException;
@@ -19,7 +21,7 @@ import com.gemstone.gemfire.pdx.PdxWriter;
 
  
 public class insertDatabase {
-    public static void insertAdmission(String file_name, Region<int, Admissions> regionA) {
+    public static void insertAdmission(String file_name, Region<Integer, Admissions> regionA) {
         String line = null;
         int data_index = 0;
         try {
@@ -29,6 +31,7 @@ public class insertDatabase {
                 String[] split_line = line.split(",");
                 Admissions admission = new Admissions(split_line);
                 regionA.put(data_index, admission);
+			    data_index += 1;
                 break;
             }
         } catch (Exception e) {
@@ -37,8 +40,8 @@ public class insertDatabase {
     }
     public static void main(String[] args) throws Exception {
         ClientCache cache = new ClientCacheFactory().addPoolLocator("localhost", 10334).create();
-        Region<int, Admissions> regionA = cache.<int, Admission>createClientRegionFactory(ClientRegionShortcut.CACHING_PROXY).create("regionA");
-        insertAdmission("./csv/admissions.csv");
+        Region<Integer, Admissions> regionA = cache.<Integer, Admissions>createClientRegionFactory(ClientRegionShortcut.CACHING_PROXY).create("regionA");
+        insertDatabase.insertAdmission("./csv/admissions.csv", regionA);
     }
 }
 
@@ -62,6 +65,12 @@ class Admissions implements PdxSerializable{
     private int has_chartevents_data;
 
     public Admissions(String[] split_line) {
+        System.out.println("---------------------------------------");
+	    System.out.println("CSV Line");
+		System.out.println("---------------------------------------");
+		for (int index = 0; index < split_line.length; index++) {
+			System.out.println(split_line[index]);
+		}
         this.row_id = Integer.parseInt(split_line[0]);
         this.subject_id = Integer.parseInt(split_line[1]);
         this.admittime = split_line[2];
@@ -79,10 +88,10 @@ class Admissions implements PdxSerializable{
         this.has_chartevents_data = Integer.parseInt(split_line[14]);
     }
 
-    public Admissions(final int row_id, final int subject_id, final int hadm_id, final String admittime
+    public Admissions(final int row_id, final int subject_id, final int hadm_id, final String admittime,
         final String dischtime, final String deathtime, final String admission_type, final String admission_location,
         final String discharge_location, final String insurance, final String language, final String religion,
-        final String maritial_status, final String ethnicity, final int has_inevents_data, final String has_chartevents_data) {
+        final String maritial_status, final String ethnicity, final int has_inevents_data, final int has_chartevents_data) {
         this.row_id = row_id;
         this.subject_id = subject_id;
         this.admittime = admittime;
@@ -135,8 +144,8 @@ class Admissions implements PdxSerializable{
         pw.writeString("religion", religion);
         pw.writeString("maritial_status", maritial_status);
         pw.writeString("ethnicity", ethnicity);
-        pw.writeString("has_inevents_data", has_inevents_data);
-        pw.writeString("has_chartevents_data", has_chartevents_data);
+        pw.writeInt("has_inevents_data", has_inevents_data);
+        pw.writeInt("has_chartevents_data", has_chartevents_data);
 
     }
 }

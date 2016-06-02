@@ -49,7 +49,7 @@ public class HelloWorld {
 
 class Person  implements PdxSerializable /*ResourceSupport  implements DomainObject< Long>*/  {
 
-   private static final long serialVersionUID = 42108163264l;
+   //private static final long serialVersionUID = 42108163264l;
 
    protected static final String DOB_FORMAT_PATTERN =  "MM/dd/yyyy";
 
@@ -79,7 +79,7 @@ class Person  implements PdxSerializable /*ResourceSupport  implements DomainObj
      this.middleName = middleName;
      this.lastName = lastName;
   }
-
+/*
    public Long getId() {
      return id;
   }
@@ -151,7 +151,7 @@ class Person  implements PdxSerializable /*ResourceSupport  implements DomainObj
     buffer.append( " }");
      return buffer.toString();
   }
-
+*/
   @Override
    public void fromData(PdxReader pr) {
 	
