@@ -32,7 +32,6 @@ public class insertDatabase {
                 Admissions admission = new Admissions(split_line);
                 regionA.put(data_index, admission);
 			    data_index += 1;
-                break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,12 +65,40 @@ class Admissions implements PdxSerializable{
     private int has_chartevents_data;
 
     public Admissions(String[] split_line) {
-        System.out.println("---------------------------------------");
-	    System.out.println("CSV Line");
-		System.out.println("---------------------------------------");
-		for (int index = 0; index < split_line.length; index++) {
-			System.out.println(split_line[index]);
+		String[] new_split = new String[17];
+		int new_index = 0;
+		if (split_line.length > 17) {
+			for (int index = 0; index < split_line.length; index++) {
+				if (split_line[index].length() > 0 && split_line[index].charAt(0) == '"' && split_line[index].charAt(split_line[index].length() - 1) != '"') {
+					String tempString = split_line[index];
+					index += 1;
+					while (index < split_line.length) {
+						if (split_line[index].length() > 0 && split_line[index].charAt(split_line[index].length() - 1) != '"') {
+							tempString += split_line[index];
+						}
+						else {
+							tempString += split_line[index];
+							break;
+						}
+						index += 1;
+					}
+					new_split[new_index] = tempString;
+				}
+				else {
+					new_split[new_index] = split_line[index];
+				}
+				new_index += 1;
+			}
+			split_line = new_split;
 		}
+		/*
+		System.out.println("----------------------------------------");
+        System.out.println("Keys");
+        System.out.println("----------------------------------------");
+        for (int index = 0; index < split_line.length; index++) {
+            System.out.println(split_line[index]);
+        }
+		*/
         this.row_id = Integer.parseInt(split_line[0]);
         this.subject_id = Integer.parseInt(split_line[1]);
         this.hadm_id = Integer.parseInt(split_line[2]);
@@ -86,7 +113,7 @@ class Admissions implements PdxSerializable{
         this.religion = split_line[11];
         this.maritial_status = split_line[12];
         this.ethnicity = split_line[13];
-        this.diagnosis = split_line[14]
+        this.diagnosis = split_line[14];
         this.has_inevents_data = Integer.parseInt(split_line[15]);
         this.has_chartevents_data = Integer.parseInt(split_line[16]);
     }
