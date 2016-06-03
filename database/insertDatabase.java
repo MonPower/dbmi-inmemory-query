@@ -31,12 +31,42 @@ public class insertDatabase {
                 String[] split_line = line.split(",");
                 Admissions admission = new Admissions(split_line);
                 regionA.put(data_index, admission);
-			    data_index += 1;
+                data_index += 1;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public static void parseCSV(String[] split_line, int num_args) {
+        String[] new_split = new String[num_args];
+        int new_index = 0;
+        if (split_line.length > num_args) {
+            for (int index = 0; index < split_line.length; index++) {
+                if (split_line[index].length() > 0 && split_line[index].charAt(0) == '"' && split_line[index].charAt(split_line[index].length() - 1) != '"') {
+                    String tempString = split_line[index];
+                    index += 1;
+                    while (index < split_line.length) {
+                        if (split_line[index].length() > 0 && split_line[index].charAt(split_line[index].length() - 1) != '"') {
+                            tempString += split_line[index];
+                        }
+                        else {
+                            tempString += split_line[index];
+                            break;
+                        }
+                        index += 1;
+                    }
+                    new_split[new_index] = tempString;
+                }
+                else {
+                    new_split[new_index] = split_line[index];
+                }
+                new_index += 1;
+            }
+            split_line = new_split;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         ClientCache cache = new ClientCacheFactory().addPoolLocator("localhost", 10334).create();
         Region<Integer, Admissions> regionA = cache.<Integer, Admissions>createClientRegionFactory(ClientRegionShortcut.CACHING_PROXY).create("regionA");
@@ -44,7 +74,9 @@ public class insertDatabase {
     }
 }
 
-// ADMISSIONS Table class
+/* 
+ADMISSIONS Table class
+*/
 class Admissions implements PdxSerializable{
     private int row_id;
     private int subject_id;
@@ -65,40 +97,8 @@ class Admissions implements PdxSerializable{
     private int has_chartevents_data;
 
     public Admissions(String[] split_line) {
-		String[] new_split = new String[17];
-		int new_index = 0;
-		if (split_line.length > 17) {
-			for (int index = 0; index < split_line.length; index++) {
-				if (split_line[index].length() > 0 && split_line[index].charAt(0) == '"' && split_line[index].charAt(split_line[index].length() - 1) != '"') {
-					String tempString = split_line[index];
-					index += 1;
-					while (index < split_line.length) {
-						if (split_line[index].length() > 0 && split_line[index].charAt(split_line[index].length() - 1) != '"') {
-							tempString += split_line[index];
-						}
-						else {
-							tempString += split_line[index];
-							break;
-						}
-						index += 1;
-					}
-					new_split[new_index] = tempString;
-				}
-				else {
-					new_split[new_index] = split_line[index];
-				}
-				new_index += 1;
-			}
-			split_line = new_split;
-		}
-		/*
-		System.out.println("----------------------------------------");
-        System.out.println("Keys");
-        System.out.println("----------------------------------------");
-        for (int index = 0; index < split_line.length; index++) {
-            System.out.println(split_line[index]);
-        }
-		*/
+        int admission_colums = 17;
+        insertDatabase.parseCSV(split_line, admission_colums);
         this.row_id = Integer.parseInt(split_line[0]);
         this.subject_id = Integer.parseInt(split_line[1]);
         this.hadm_id = Integer.parseInt(split_line[2]);
@@ -182,5 +182,120 @@ class Admissions implements PdxSerializable{
         pw.writeInt("has_inevents_data", has_inevents_data);
         pw.writeInt("has_chartevents_data", has_chartevents_data);
 
+    }
+}
+
+
+/* 
+CALLOUT table class
+*/
+class Callout implements PdxSerializable{
+    private int row_id;
+    private int subject_id;
+    private int hadm_id;
+    private int submit_wardid;
+    private String submit_careunit;
+    private int curr_wardid;
+    private String curr_careunit;
+    private int callout_wardid;
+    private String callout_service;
+    private int request_tele;
+    private int request_resp;
+    private int request_cdiff;
+    private int request_mrsa;
+    private int request_vre;
+    private String callout_status;
+    private String callout_outcome;
+    private int discharge_wardid;
+    private String acknowledge_status;
+    private String createtime;
+    private String updatetime;
+    private String acknowledgetime;
+    private String outcometime;
+    private String firstreservationtime;
+    private String currentreservationtime;
+
+    public Callout(String[] split_line) {
+        int callout_columns = 24;
+        insertDatabase.parseCSV(split_line, callout_columns);
+        row_id = split_line[0];
+        subject_id = split_line[1];
+        hadm_id = split_line[2];
+        submit_wardid = split_line[3];
+        submit_careunit = split_line[4];
+        curr_wardid = split_line[5];
+        curr_careunit = split_line[6];
+        callout_wardid = split_line[7];
+        callout_service = split_line[8];
+        request_tele = split_line[9];
+        request_resp = split_line[10];
+        request_cdiff = split_line[11];
+        request_mrsa = split_line[12];
+        request_vre = split_line[13];
+        callout_status = split_line[14];
+        callout_outcome = split_line[15];
+        discharge_wardid = split_line[16];
+        acknowledge_status = split_line[17];
+        createtime = split_line[18];
+        updatetime = split_line[19];
+        acknowledgetime = split_line[20];
+        outcometime = split_line[21];
+        firstreservationtime = split_line[22];
+        currentreservationtime = split_line[23];
+    }
+
+    @Override
+    public void fromData(PdxReader pr) {
+        row_id = pr.readInt("row_id");
+        subject_id = pr.readInt("subject_id");
+        hadm_id = pr.readInt("hadm_id");
+        submit_wardid = pr.readInt("submit_wardid");
+        submit_careunit = pr.writeString("submit_careunit");
+        curr_wardid = pr.readInt("curr_wardid");
+        curr_careunit = pr.readString("curr_careunit");
+        callout_wardid = pr.readInt("callout_wardid");
+        callout_service = pr.readString("callout_service");
+        request_tele = pr.readInt("request_tele");
+        request_resp = pr.readInt("request_tele");
+        request_cdiff = pr.readInt("request_resp");
+        request_mrsa = pr.readInt("request_mrsa");
+        request_vre = pr.readInt("request_vre");
+        callout_status = pr.readString("callout_status");
+        callout_outcome = pr.readString("callout_outcome");
+        discharge_wardid = pr.readInt("discharge_wardid");
+        createtime = pr.readString("createtime");
+        updatetime = pr.readString("updatetime");
+        acknowledgetime = pr.readString("acknowledgetime");
+        outcometime = pr.readString("outcometime");
+        firstreservationtime = pr.readString("firstreservationtime");
+        currentreservationtime = pr.readString("currentreservationtime");
+    }
+
+    @Override
+    public void toData(PdxWriter pw) {
+        pw.writeInt("row_id". row_id);
+        pw.writeInt("subject_id", subject_id);
+        pw.writeInt("hadm_id", hadm_id);
+        pw.writeInt("submit_wardid", submit_wardid);
+        pw.writeString("submit_careunit", submit_careunit);
+        pw.writeInt("curr_wardid", curr_wardid);
+        pw.writeString("curr_careunit", curr_careunit);
+        pw.writeInt("callout_wardid", callout_wardid);
+        pw.writeString("callout_service", callout_service);
+        pw.writeInt("request_tele", request_tele);
+        pw.writeInt("request_resp", request_resp);
+        pw.writeInt("request_cdiff", request_cdiff);
+        pw.writeInt("request_mrsa", request_mrsa);
+        pw.writeInt("request_vre"m request_vre);
+        pw.writeString("callout_status", callout_status);
+        pw.writeString("callout_outcome", callout_outcome);
+        pw.writeInt("discharge_wardid", discharge_wardid);
+        pw.writeString("acknowledge_status", acknowledge_status);
+        pw.writeString("createtime", createtime);
+        pw.writeString("updatetime", updatetime);
+        pw.writeString("acknowledgetime", acknowledgetime);
+        pw.writeString("outcometime", outcometime);
+        pw.writeString("firstreservationtime", firstreservationtime);
+        pw.writeString("currentreservationtime", currentreservationtime);
     }
 }
